@@ -1,0 +1,9 @@
+
+.searchbar {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.searchInput {
+    height: 3rem;
+}
