@@ -1,32 +1,39 @@
-import React, { useContext, useEffect, useState } from 'react'
-import Layout from '../components/Layout'
-import Menu from '../components/Menu'
-import SearchBar from '../components/SearchBar'
-import Rides from '../components/Rides'
-import RideContext from '../context/ride/rideContext'
-import RiderRide from '../components/RiderRide'
+import React, { useContext, useEffect, useState } from "react";
+import Layout from "../components/Layout";
+import Menu from "../components/Menu";
+import SearchBar from "../components/SearchBar";
+import Rides from "../components/Rides";
+import RideContext from "../context/ride/rideContext";
+import UserContext from "../context/users/userContext";
+import RiderRide from "../components/RiderRide";
 
 const Home = () => {
-    const rideContext = useContext(RideContext)
-    const { getRide, riderRide } = rideContext
+  const userContext = useContext(UserContext);
+  const { isAuth } = userContext;
 
-    const [ride, setRide] = useState()
-    useEffect(() => {
-        const getCurrentRide = async () => {
-            const data = await getRide(riderRide)
-            setRide(data)
-        }
-        getCurrentRide()
-    },[riderRide])
+  const rideContext = useContext(RideContext);
+  const { getRide, riderRide } = rideContext;
 
-    return (
-        <Layout>
-            <Menu />
-            <SearchBar />
-            {ride && <RiderRide ride={ride} />}
-            <Rides />
-        </Layout>
-    )
-}
+  const [ride, setRide] = useState();
+  useEffect(() => {
+    // Only query rides if user has been authenticated
+    if (isAuth) {
+      const getCurrentRide = async () => {
+        const data = await getRide(riderRide);
+        setRide(data);
+      };
+      getCurrentRide();
+    }
+  }, [riderRide, isAuth]);
 
-export default Home
+  return (
+    <Layout>
+      <Menu />
+      <SearchBar />
+      {ride && <RiderRide ride={ride} />}
+      <Rides />
+    </Layout>
+  );
+};
+
+export default Home;
