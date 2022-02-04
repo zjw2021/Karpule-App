@@ -22,13 +22,6 @@ const Login = () => {
     password: "",
   });
 
-  const clearForm = () => {
-    setUser({
-      email: "",
-      password: "",
-    });
-  };
-
   const login = async (e) => {
     e.preventDefault();
     try {
@@ -37,7 +30,6 @@ const Login = () => {
       setShowSnackbar(true);
       setSnackbarMessage(`Failed to login: ${e.message}`);
     }
-    clearForm();
   };
 
   const keyDown = (e) => {

@@ -132,8 +132,9 @@ const RideState = props => {
     }
 
     const getRide = async (ride) => {
+        console.log(ride);
         if (ride === "") return
-        const res = await axios.get(`/api/rides/${ride}`)
+        const res = await axios.get(`/api/rides/get/${ride}`)
         return res.data
     }
 

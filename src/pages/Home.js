@@ -17,7 +17,7 @@ const Home = () => {
   const [ride, setRide] = useState();
   useEffect(() => {
     // Only query rides if user has been authenticated
-    if (isAuth) {
+    if (isAuth && riderRide) {
       const getCurrentRide = async () => {
         const data = await getRide(riderRide);
         setRide(data);
