@@ -1,84 +1,134 @@
-import React, { useContext, useState } from 'react'
-import RideContext from '../../context/ride/rideContext'
-import UserContext from '../../context/users/userContext';
-import Sheet from 'react-modal-sheet';
-
+import React, { useContext, useState } from "react";
+import RideContext from "../../context/ride/rideContext";
+import UserContext from "../../context/users/userContext";
+import Sheet from "react-modal-sheet";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import FormControl from "@mui/material/FormControl";
+import TextField from "@mui/material/TextField";
+import AddIcon from "@mui/icons-material/Add";
 
 const CreateRide = () => {
+  const rideContext = useContext(RideContext);
+  const { createRide, driverRide } = rideContext;
 
-    const rideContext = useContext(RideContext)
-    const { createRide, driverRide } = rideContext
+  const userContext = useContext(UserContext);
+  const { user } = userContext;
 
-    const userContext = useContext(UserContext)
-    const { user } = userContext
+  const [ride, setRide] = useState({
+    destination: "",
+    pickupLocation: "",
+    pickupTime: "",
+    seatLimit: "",
+    seatFee: "",
+  });
 
-    const [ride, setRide] = useState({
-        destination: "",
-        pickupLocation: "",
-        pickupTime: "",
-        seatLimit: "",
-        seatFee: ""
-    })
+  const { destination, pickupLocation, pickupTime, seatLimit, seatFee } = ride;
 
-    const { destination, pickupLocation, pickupTime, seatLimit, seatFee } = ride
+  const resetForm = () => {
+    setRide({
+      destination: "",
+      pickupLocation: "",
+      pickupTime: "",
+      seatLimit: "",
+      seatFee: "",
+    });
+  };
 
-    const resetForm = () => {
-        setRide({
-            destination: "",
-            pickupLocation: "",
-            pickupTime: "",
-            seatLimit: "",
-            seatFee: ""
-        })
-    }
+  const onChange = (e) => {
+    setRide({ ...ride, [e.target.name]: e.target.value });
+  };
 
-    const onChange = (e) => {
-        setRide({ ...ride, [e.target.name]: e.target.value })
-    }
+  const onSubmit = (e) => {
+    e.preventDefault();
+    createRide(ride, user);
+    resetForm();
+    setOpen(false);
+  };
 
-    const onSubmit = (e) => {
-        e.preventDefault()
-        createRide(ride, user)
-        resetForm()
-        setOpen(false)
-    }
+  const [isOpen, setOpen] = useState(false);
 
-    const [isOpen, setOpen] = useState(false);
+  return (
+    <div>
+      {driverRide === null ? (
+        <Button
+          startIcon={<AddIcon />}
+          variant="contained"
+          size="large"
+          onClick={() => setOpen(true)}
+        >
+          Create Ride
+        </Button>
+      ) : (
+        <p className="bodyLg w-med">Current Ride</p>
+      )}
+      {driverRide === null && (
+        <Typography marginTop="2vh">You don't have any rides</Typography>
+      )}
+      <Sheet isOpen={isOpen} onClose={() => setOpen(false)}>
+        <Sheet.Container>
+          <Sheet.Header />
+          <Sheet.Content>
+            <Container sx={{ paddingTop: "8vh" }}>
+              <Box marginBottom="5vh">
+                <Typography variant="h4" fontWeight="bold">
+                  Create ride +
+                </Typography>
+              </Box>
+              <FormControl sx={{ width: "100%", marginBottom: "3vh" }}>
+                <TextField
+                  size="small"
+                  sx={{ marginBottom: "2vh" }}
+                  name="destination"
+                  label="Destination"
+                  value={destination}
+                  onChange={onChange}
+                />
+                <TextField
+                  size="small"
+                  sx={{ marginBottom: "2vh" }}
+                  name="pickupLocation"
+                  label="Pickup"
+                  value={pickupLocation}
+                  onChange={onChange}
+                />
+                <TextField
+                  size="small"
+                  sx={{ marginBottom: "2vh" }}
+                  name="pickupTime"
+                  label="Time"
+                  value={pickupTime}
+                  onChange={onChange}
+                />
+                <TextField
+                  size="small"
+                  sx={{ marginBottom: "2vh" }}
+                  name="seatLimit"
+                  label="Limit"
+                  value={seatLimit}
+                  onChange={onChange}
+                />
+                <TextField
+                  size="small"
+                  sx={{ marginBottom: "4vh" }}
+                  name="seatFee"
+                  label="Fee"
+                  value={seatFee}
+                  onChange={onChange}
+                />
+                <Button variant="contained" color="primary" onClick={onSubmit}>
+                  Create
+                </Button>
+              </FormControl>
+            </Container>
+          </Sheet.Content>
+        </Sheet.Container>
+        <Sheet.Backdrop />
+      </Sheet>
+    </div>
+  );
+};
 
-    return (
-        <div>
-            {driverRide === null ?
-                <p className="bodyLg w-med" onClick={() => setOpen(true)}>+ Ride</p>
-                :
-                <p className="bodyLg w-med">Current Ride</p>
-            }
-            {driverRide === null && <p className="bodyMd w-reg">You don't have any rides</p>}
-            <Sheet isOpen={isOpen} onClose={() => setOpen(false)}>
-                <Sheet.Container>
-                    <Sheet.Header />
-                    <Sheet.Content>
-                        <div className="container">
-                            <div className="form">
-                                <form onSubmit={onSubmit}>
-                                    <div className="logoContainer">
-                                        <p className="titleXl logo">Create ride +</p>
-                                        <p className="bodyMd">Karpule Driver Mode</p>
-                                    </div>
-                                    <input name="destination" placeholder="destination" className="formInput" value={destination} onChange={onChange} />
-                                    <input name="pickupLocation" placeholder="pickup" className="formInput" value={pickupLocation} onChange={onChange} />
-                                    <input name="pickupTime" placeholder="time" className="formInput" value={pickupTime} onChange={onChange} />
-                                    <input name="seatLimit" placeholder="limit" className="formInput" value={seatLimit} onChange={onChange} />
-                                    <input name="seatFee" placeholder="fee" className="formInput" value={seatFee} onChange={onChange} />
-                                    <button type="submit" className="formButton bodyMd w-bold">Create</button>
-                                </form>
-                            </div>
-                        </div>
-                    </Sheet.Content>
-                </Sheet.Container>
-                <Sheet.Backdrop />
-            </Sheet>
-        </div>
-    )
-}
-
-export default CreateRide
+export default CreateRide;
