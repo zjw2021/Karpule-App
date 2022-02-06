@@ -54,7 +54,7 @@ const CreateRide = () => {
     <div>
       {driverRide === null ? (
         <Button
-          startIcon={<AddIcon />}
+          endIcon={<AddIcon />}
           variant="contained"
           size="large"
           onClick={() => setOpen(true)}
@@ -64,9 +64,6 @@ const CreateRide = () => {
       ) : (
         <p className="bodyLg w-med">Current Ride</p>
       )}
-      {driverRide === null && (
-        <Typography marginTop="2vh">You don't have any rides</Typography>
-      )}
       <Sheet isOpen={isOpen} onClose={() => setOpen(false)}>
         <Sheet.Container>
           <Sheet.Header />
@@ -74,7 +71,7 @@ const CreateRide = () => {
             <Container sx={{ paddingTop: "8vh" }}>
               <Box marginBottom="5vh">
                 <Typography variant="h4" fontWeight="bold">
-                  Create ride +
+                  Create Ride +
                 </Typography>
               </Box>
               <FormControl sx={{ width: "100%", marginBottom: "3vh" }}>

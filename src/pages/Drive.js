@@ -1,34 +1,33 @@
-import React, { useContext, useEffect } from 'react'
-import Layout from '../components/Layout'
-import Menu from '../components/Menu'
-import CreateRide from '../components/CreateRide'
-import DriverRide from '../components/DriverRide'
-import RideContext from '../context/ride/rideContext'
-import UserContext from '../context/users/userContext'
-import Passengers from '../components/Passengers'
+import React, { useContext, useEffect, useState } from "react";
+import Layout from "../components/Layout";
+import Menu from "../components/Menu";
+import CreateRide from "../components/CreateRide";
+import DriverRide from "../components/DriverRide";
+import UserContext from "../context/users/userContext";
+import Passengers from "../components/Passengers";
 
 const Drive = () => {
-    const rideContext = useContext(RideContext)
-    const { driverRide, getRide, createRide } = rideContext
+  const [rides, setRides] = useState([]);
 
-    const userContext = useContext(UserContext)
-    const { user } = userContext
+  const userContext = useContext(UserContext);
+  const { user, getDriverRides } = userContext;
 
-    useEffect(() => {
-        getRide(user.user.ride)
-    },[])
-    return (
-        <Layout>
-            <Menu />
-            <CreateRide />
-            {driverRide && 
-                <div>
-                    <DriverRide />
-                    <Passengers />
-                </div>
-            }
-        </Layout>
-    )
-}
+  useEffect(async () => {
+    setRides(await getDriverRides(user.user._id));
+  }, []);
 
-export default Drive
+  return (
+    <Layout>
+      <Menu />
+      <CreateRide />
+      {rides.length > 0 && (
+        <div>
+          <DriverRide rides={rides} />
+          <Passengers />
+        </div>
+      )}
+    </Layout>
+  );
+};
+
+export default Drive;
