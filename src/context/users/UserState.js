@@ -115,6 +115,17 @@ const UserState = (props) => {
     }
   };
 
+  // Return the rides associated with the given user
+  const getDriverRides = async (user) => {
+    try {
+      if (user === "") return;
+      const res = await axios.get(`/api/users/rides/${user}`);
+      return res.data;
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
   return (
     <UserContext.Provider
       value={{
@@ -129,6 +140,7 @@ const UserState = (props) => {
         loadUser,
         logoutUser,
         getUser,
+        getDriverRides,
       }}
     >
       {props.children}

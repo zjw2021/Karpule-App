@@ -1,21 +1,39 @@
-import React, { useContext, useState } from 'react'
-import "./searchbar.css"
-import RideContext from '../../context/ride/rideContext'
-import "../../styles/components.css"
+import React, { useContext, useState } from "react";
+import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
+import InputAdornment from "@mui/material/InputAdornment";
+import TextField from "@mui/material/TextField";
+import SearchIcon from "@mui/icons-material/Search";
+import "./searchbar.css";
+import RideContext from "../../context/ride/rideContext";
+import "../../styles/components.css";
 
 const SearchBar = () => {
-    const rideContext = useContext(RideContext)
-    const { searchRide, rides } = rideContext
+  const rideContext = useContext(RideContext);
+  const { searchRide, rides } = rideContext;
 
-    const onSearch = e => {
-        searchRide(e.target.value)
-    }
+  const onSearch = (e) => {
+    searchRide(e.target.value);
+  };
 
-    return (
-        <div className="searchbar">
-            <input placeholder="Search for rides" className="formInput searchInput" onChange={onSearch} />
-        </div>
-    )
-}
+  return (
+    <Container sx={{ width: "100%" }}>
+      <Box display="flex" flexDirection="column">
+        <TextField
+          width="100%"
+          label="Search rides"
+          onChange={onSearch}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Box>
+    </Container>
+  );
+};
 
-export default SearchBar
+export default SearchBar;
