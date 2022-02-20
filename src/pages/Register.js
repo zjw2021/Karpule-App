@@ -36,15 +36,19 @@ const Register = () => {
       carModel: "",
       carPlate: "",
       carColor: "",
+      firstName: "",
+      lastName: "",
     });
   };
 
   const register = (e) => {
     e.preventDefault();
     if (emailAddress !== "babson.edu") {
-        setShowSnackbar(true);
-        setSnackbarMessage("Invalid email: please register with your Babson email");
-        return;
+      setShowSnackbar(true);
+      setSnackbarMessage(
+        "Invalid email: please register with your Babson email"
+      );
+      return;
     }
     registerUser(user);
     clearForm();
@@ -69,6 +73,20 @@ const Register = () => {
           <Typography>Create new account</Typography>
         </Box>
         <FormControl sx={{ width: "100%", marginBottom: "3vh" }}>
+          <TextField
+            size="small"
+            name="firstName"
+            label="First Name"
+            onChange={onChange}
+            sx={{ marginBottom: "2vh" }}
+          />
+          <TextField
+            size="small"
+            name="lastName"
+            label="Last Name"
+            onChange={onChange}
+            sx={{ marginBottom: "2vh" }}
+          />
           <TextField
             size="small"
             name="email"

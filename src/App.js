@@ -12,6 +12,8 @@ import RideState from "./context/ride/RideState";
 import LoginPage from "./pages/Login";
 import RegisterPage from "./pages/Register";
 
+import RegisterCompletePage from "./pages/RegisterComplete";
+
 import HomePage from "./pages/Home";
 import DrivePage from "./pages/Drive";
 
@@ -42,6 +44,7 @@ function BrowserRoutes() {
         path="/drive"
         element={isDriver ? <DrivePage /> : <Navigate to="/" />}
       />
+      <Route exact path="/registercomplete" element={<RegisterCompletePage />} />
     </Routes>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Link, Navigate } from "react-router-dom";
 import UserContext from "../context/users/userContext";
 import Box from "@mui/material/Box";
@@ -10,9 +10,11 @@ import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 
+import { useSearchParams } from "react-router-dom";
+
 const Login = () => {
   const userContext = useContext(UserContext);
-  const { loginUser, isAuth } = userContext;
+  const { loginUser, isAuth, setStripeCodeAndState } = userContext;
 
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -42,6 +44,17 @@ const Login = () => {
   const onChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
+
+  const [searchParams] = useSearchParams();
+  useEffect(async () => {
+    // Check if there are searchParams
+    const code = searchParams.get("code");
+    const state = searchParams.get("state");
+    console.log({ code, state });
+    if (code != null && state != null) {
+      setStripeCodeAndState(code, state);
+    }
+  }, []);
 
   return (
     <Container sx={{ height: "100%", width: "80%" }}>
