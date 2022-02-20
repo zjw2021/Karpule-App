@@ -3,6 +3,7 @@ import {
     LOGIN_FAIL,
     REGISTER_SUCCESS,
     REGISTER_FAIL,
+    STRIPE_FINALIZE,
     REGISTER_DRIVER_SUCCESS,
     REGISTER_DRIVER_FAIL,
     LOAD_USER,
@@ -33,6 +34,11 @@ const userReducer = (state, action) => {
                 isAuth: false,
                 user: null
             };
+        case STRIPE_FINALIZE:
+            return {
+                ...state,
+                stripeStatus: action.payload,
+            }
         case REGISTER_DRIVER_SUCCESS:
             return {
                 ...state,

@@ -7,6 +7,7 @@ import {
   LOGIN_FAIL,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
+  STRIPE_FINALIZE,
   REGISTER_DRIVER_SUCCESS,
   REGISTER_DRIVER_FAIL,
   LOAD_USER,
@@ -21,30 +22,78 @@ const UserState = (props) => {
     token: null,
     isAuth: null,
     alert: null,
+    stripeStatus: null,
   };
 
   const [state, dispatch] = useReducer(userReducer, initialState);
 
   const registerUser = async (user) => {
-    const { email, password, carModel, carPlate, carColor } = user;
+    const {
+      email,
+      password,
+      carModel,
+      carPlate,
+      carColor,
+      firstName,
+      lastName,
+    } = user;
 
     try {
       const config = { headers: { "content-type": "application/json" } };
 
-      //Send response to database with volunteer's firstname, lastname, and email
+      // Send response to database with volunteer's firstname, lastname, and email
+      await axios
+        .post(
+          "/api/users/register",
+          {
+            email,
+            password,
+            carModel,
+            carPlate,
+            carColor,
+            firstName,
+            lastName,
+          },
+          config
+        )
+        .then(async (res) => {
+          //If no errors, set volunteer variable to response
+          dispatch({
+            type: REGISTER_SUCCESS,
+            payload: res.data,
+          });
+
+          loadUser(res.data);
+
+          // Call stripe endpoint
+          const stripe = await axios.get("/api/stripe/authorize", {
+            headers: { "x-auth-token": res.data.token },
+          });
+
+          // Redirect to given url (replace current tab)
+          // url: "https://connect.stripe.com/express/oauth/authorize"
+          window.location.href = stripe.data.url;
+        });
+    } catch (err) {
+      console.log(err.msg);
+    }
+  };
+
+  const finalizeStripe = async (code, state, token) => {
+    console.log("This is the token:", token);
+    try {
+      const config = {
+        headers: { "content-type": "application/json", "x-auth-token": token },
+      };
       const res = await axios.post(
-        "/api/users/register",
-        { email, password, carModel, carPlate, carColor },
+        "/api/stripe/finalize",
+        { code, state },
         config
       );
-
-      //If no errors, set volunteer variable to response
       dispatch({
-        type: REGISTER_SUCCESS,
-        payload: res.data,
+        type: STRIPE_FINALIZE,
+        payload: res.status,
       });
-
-      loadUser(res.data);
     } catch (err) {
       console.log(err.msg);
     }
@@ -134,7 +183,9 @@ const UserState = (props) => {
         hasRegistered: state.hasRegistered,
         token: state.token,
         isAuth: state.isAuth,
+        stripeStatus: state.stripeStatus,
         registerUser,
+        finalizeStripe,
         registerDriver,
         loginUser,
         loadUser,
