@@ -9,13 +9,20 @@ import RiderRide from "../components/RiderRide";
 
 const Home = () => {
   const userContext = useContext(UserContext);
-  const { isAuth } = userContext;
+  const {
+    isAuth,
+    finalizeStripe,
+    isAuthorizedStripe,
+    token,
+    stripeCode,
+    stripeState,
+  } = userContext;
 
   const rideContext = useContext(RideContext);
   const { getRide, riderRide } = rideContext;
 
   const [ride, setRide] = useState();
-  useEffect(() => {
+  useEffect(async () => {
     // Only query rides if user has been authenticated
     if (isAuth && riderRide) {
       const getCurrentRide = async () => {
@@ -23,6 +30,15 @@ const Home = () => {
         setRide(data);
       };
       getCurrentRide();
+    }
+
+    // 1. Check if stripe has been successfully integrated for the current user
+    if (!(await isAuthorizedStripe(token))) {
+      // 2. Finalize stripe
+      if (stripeCode != null && stripeState != null) {
+        console.log("code and state are not null/undefined");
+        await finalizeStripe(stripeCode, stripeState, token);
+      }
     }
   }, [riderRide, isAuth]);
 

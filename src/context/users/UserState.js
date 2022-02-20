@@ -8,6 +8,7 @@ import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
   STRIPE_FINALIZE,
+  STRIPE_SET_CODE_STATE,
   REGISTER_DRIVER_SUCCESS,
   REGISTER_DRIVER_FAIL,
   LOAD_USER,
@@ -23,6 +24,8 @@ const UserState = (props) => {
     isAuth: null,
     alert: null,
     stripeStatus: null,
+    stripeCode: null,
+    stripeState: null,
   };
 
   const [state, dispatch] = useReducer(userReducer, initialState);
@@ -90,6 +93,7 @@ const UserState = (props) => {
         { code, state },
         config
       );
+      console.log("FINALIZED STRIPE");
       dispatch({
         type: STRIPE_FINALIZE,
         payload: res.status,
@@ -97,6 +101,25 @@ const UserState = (props) => {
     } catch (err) {
       console.log(err.msg);
     }
+  };
+
+  const isAuthorizedStripe = async (token) => {
+    try {
+      const config = {
+        headers: { "content-type": "application/json", "x-auth-token": token },
+      };
+      const res = await axios.post("/api/stripe/isauthorized", {}, config);
+      return res.data.complete;
+    } catch (err) {
+      console.log(err.msg);
+    }
+  };
+
+  const setStripeCodeAndState = (code, state) => {
+    dispatch({
+      type: STRIPE_SET_CODE_STATE,
+      payload: { code, state },
+    });
   };
 
   const registerDriver = async (info, user) => {
@@ -184,8 +207,12 @@ const UserState = (props) => {
         token: state.token,
         isAuth: state.isAuth,
         stripeStatus: state.stripeStatus,
+        stripeCode: state.stripeCode,
+        stripeState: state.stripeState,
         registerUser,
         finalizeStripe,
+        isAuthorizedStripe,
+        setStripeCodeAndState,
         registerDriver,
         loginUser,
         loadUser,
