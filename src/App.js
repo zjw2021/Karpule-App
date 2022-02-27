@@ -32,7 +32,17 @@ const theme = createTheme({
 
 function BrowserRoutes() {
   const userContext = useContext(UserContext);
-  const { isDriver } = userContext;
+  const { isAuth, isDriver, loginUserWithToken } = userContext;
+
+  if (!isAuth) {
+    // Check for authentication token
+    const token = localStorage.getItem("token");
+    if (token && token !== "undefined") {
+      console.log("loginUserWithToken");
+      loginUserWithToken(token);
+    }
+  }
+
   return (
     <Routes>
       <Route exact path="/login" element={<LoginPage />} />
@@ -44,10 +54,15 @@ function BrowserRoutes() {
         path="/drive"
         element={isDriver ? <DrivePage /> : <Navigate to="/" />}
       />
-      <Route exact path="/registercomplete" element={<RegisterCompletePage />} />
+      <Route
+        exact
+        path="/registercomplete"
+        element={<RegisterCompletePage />}
+      />
     </Routes>
   );
 }
+
 function App() {
   return (
     <ThemeProvider theme={theme}>

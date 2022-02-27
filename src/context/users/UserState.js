@@ -105,10 +105,11 @@ const UserState = (props) => {
 
   const isAuthorizedStripe = async (token) => {
     try {
-      const config = {
-        headers: { "content-type": "application/json", "x-auth-token": token },
-      };
-      const res = await axios.post("/api/stripe/isauthorized", {}, config);
+      const res = await axios.get("/api/stripe/isauthorized", {
+        headers: {
+          "x-auth-token": token,
+        },
+      });
       return res.data.complete;
     } catch (err) {
       console.log(err.msg);
@@ -127,14 +128,14 @@ const UserState = (props) => {
       const { carModel, carPlate, carColor } = info;
       const config = { headers: { "content-type": "application/json" } };
 
-      // //Send response to database with volunteer's firstname, lastname, and email
+      // Send response to database with volunteer's firstname, lastname, and email
       const res = await axios.put(
         `/api/users/${user}`,
         { carModel, carPlate, carColor },
         config
       );
 
-      // //If no errors, set volunteer variable to response
+      // If no errors, set volunteer variable to response
       dispatch({
         type: REGISTER_DRIVER_SUCCESS,
         payload: res.data,
@@ -154,6 +155,28 @@ const UserState = (props) => {
           type: LOGIN_SUCCESS,
           payload: res.data,
         });
+
+          console.log(res.data);
+
+        loadUser(res.data);
+      })
+      .catch((error) => {
+        throw error;
+      });
+  };
+
+  const loginUserWithToken = async (token) => {
+    const config = { headers: { "content-type": "application/json" } };
+    console.log(token);
+    await axios
+      .post("/api/users/loginwithtoken", { token }, config)
+      .then((res) => {
+        dispatch({
+          type: LOGIN_SUCCESS,
+          payload: res.data,
+        });
+
+          console.log(res.data);
 
         loadUser(res.data);
       })
@@ -215,6 +238,7 @@ const UserState = (props) => {
         setStripeCodeAndState,
         registerDriver,
         loginUser,
+        loginUserWithToken,
         loadUser,
         logoutUser,
         getUser,

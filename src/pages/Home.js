@@ -32,12 +32,14 @@ const Home = () => {
       getCurrentRide();
     }
 
-    // 1. Check if stripe has been successfully integrated for the current user
-    if (!(await isAuthorizedStripe(token))) {
-      // 2. Finalize stripe
-      if (stripeCode != null && stripeState != null) {
-        console.log("code and state are not null/undefined");
-        await finalizeStripe(stripeCode, stripeState, token);
+    if (token && token !== "undefined") {
+      // 1. Check if stripe has been successfully integrated for the current user
+      if (!(await isAuthorizedStripe(token))) {
+        // 2. Finalize stripe
+        if (stripeCode != null && stripeState != null) {
+          console.log("code and state are not null/undefined");
+          await finalizeStripe(stripeCode, stripeState, token);
+        }
       }
     }
   }, [riderRide, isAuth]);
