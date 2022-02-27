@@ -20,7 +20,7 @@ const RideInformation = ({ title, content }) => (
 
 const DriverSelect = ({ isOpen, setOpen, ride }) => {
   const rideContext = useContext(RideContext);
-  const { deleteRide } = rideContext;
+  const { deleteRide, completeRide } = rideContext;
   return (
     <div>
       <Sheet isOpen={isOpen} onClose={() => setOpen(false)}>
@@ -61,6 +61,16 @@ const DriverSelect = ({ isOpen, setOpen, ride }) => {
                     }}
                   >
                     Delete Ride
+                  </Button>
+                  <Button
+                    color="success"
+                    variant="contained"
+                    onClick={() => {
+                        completeRide(ride._id);
+                      setOpen(false);
+                    }}
+                  >
+                    Complete Ride
                   </Button>
                 </Stack>
               </Box>

@@ -7,7 +7,7 @@ const RiderSelect = ({ isOpen, setOpen, ride }) => {
     const { destination, pickupLocation, pickupTime, seatFee, seatLimit, _id, passengers } = ride
 
     const rideContext = useContext(RideContext)
-    const { joinRide, leaveRide, riderRide } = rideContext
+    const { purchaseRide, leaveRide, riderRide } = rideContext
 
     const userContext = useContext(UserContext)
     const { user, getUser } = userContext
@@ -23,7 +23,7 @@ const RiderSelect = ({ isOpen, setOpen, ride }) => {
     }, [])
 
     const onJoin = () => {
-        joinRide(_id, user)
+        purchaseRide(_id);
     }
 
     const onLeave = () => {

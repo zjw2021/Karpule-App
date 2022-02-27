@@ -69,13 +69,15 @@ const UserState = (props) => {
           loadUser(res.data);
 
           // Call stripe endpoint
-          const stripe = await axios.get("/api/stripe/authorize", {
-            headers: { "x-auth-token": res.data.token },
-          });
-
-          // Redirect to given url (replace current tab)
-          // url: "https://connect.stripe.com/express/oauth/authorize"
-          window.location.href = stripe.data.url;
+          await axios
+            .get("/api/stripe/authorize", {
+              headers: { "x-auth-token": res.data.token },
+            })
+            .then((res) => {
+              // Redirect to given url (replace current tab)
+              // url: "https://connect.stripe.com/express/oauth/authorize"
+              window.location.href = res.data.url;
+            });
         });
     } catch (err) {
       console.log(err.msg);
@@ -156,7 +158,7 @@ const UserState = (props) => {
           payload: res.data,
         });
 
-          console.log(res.data);
+        console.log(res.data);
 
         loadUser(res.data);
       })
@@ -176,7 +178,7 @@ const UserState = (props) => {
           payload: res.data,
         });
 
-          console.log(res.data);
+        console.log(res.data);
 
         loadUser(res.data);
       })

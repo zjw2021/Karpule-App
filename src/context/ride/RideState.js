@@ -94,6 +94,28 @@ const RideState = props => {
         }
     }
 
+    const purchaseRide = async (ride) => {
+        try {
+            const config = { headers: { 'content-type': 'application/json', "x-auth-token": localStorage.getItem("token") } }
+
+            const stripe = await axios.post("/api/stripe/purchaseride", {ride}, config);
+
+            window.location.href = stripe.data.url;
+
+        } catch (err) {
+            console.log(err.msg);
+        }
+    }
+
+    const completeRide = async (ride) => {
+        try {
+            const config = { headers: { 'content-type': 'application/json', "x-auth-token": localStorage.getItem("token") } };
+            await axios.put(`/api/stripe/completeride/${ride}`, {}, config);
+        } catch (err) {
+            console.log(err.msg);
+        }
+    }
+
     const joinRide = async (ride, passenger) => {
         try {
             const config = { headers: { 'content-type': 'application/json' } }
@@ -103,6 +125,7 @@ const RideState = props => {
                 ride,
                 passenger
             }
+
             dispatch({
                 type: JOIN_RIDE,
                 payload: data
@@ -151,6 +174,8 @@ const RideState = props => {
                 createRide,
                 editRide,
                 deleteRide,
+                purchaseRide,
+                completeRide,
                 joinRide,
                 leaveRide,
                 getRides,

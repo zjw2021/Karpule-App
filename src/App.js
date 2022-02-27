@@ -16,6 +16,7 @@ import RegisterCompletePage from "./pages/RegisterComplete";
 
 import HomePage from "./pages/Home";
 import DrivePage from "./pages/Drive";
+import PurchaseSuccess from "./pages/PurchaseSuccess";
 
 import UserContext from "./context/users/userContext";
 
@@ -59,6 +60,7 @@ function BrowserRoutes() {
         path="/registercomplete"
         element={<RegisterCompletePage />}
       />
+      <Route exact path="/purchasesuccess" element={<PurchaseSuccess />} />
     </Routes>
   );
 }
