@@ -39,7 +39,6 @@ function BrowserRoutes() {
     // Check for authentication token
     const token = localStorage.getItem("token");
     if (token && token !== "undefined") {
-      console.log("loginUserWithToken");
       loginUserWithToken(token);
     }
   }

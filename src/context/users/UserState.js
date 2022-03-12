@@ -158,8 +158,6 @@ const UserState = (props) => {
           payload: res.data,
         });
 
-        console.log(res.data);
-
         loadUser(res.data);
       })
       .catch((error) => {
@@ -169,7 +167,6 @@ const UserState = (props) => {
 
   const loginUserWithToken = async (token) => {
     const config = { headers: { "content-type": "application/json" } };
-    console.log(token);
     await axios
       .post("/api/users/loginwithtoken", { token }, config)
       .then((res) => {
@@ -177,8 +174,6 @@ const UserState = (props) => {
           type: LOGIN_SUCCESS,
           payload: res.data,
         });
-
-        console.log(res.data);
 
         loadUser(res.data);
       })
