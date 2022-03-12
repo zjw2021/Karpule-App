@@ -50,7 +50,6 @@ const Login = () => {
     // Check if there are searchParams
     const code = searchParams.get("code");
     const state = searchParams.get("state");
-    console.log({ code, state });
     if (code != null && state != null) {
       setStripeCodeAndState(code, state);
     }

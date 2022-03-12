@@ -21,7 +21,10 @@ const RideState = props => {
         driverRide: null,
         riderRide: null,
         ride: null,
-        passengers: []
+        passengers: [],
+        requested: [],
+        awaitingPayment: [],
+        isComplete: false,
     }
 
     const [state, dispatch] = useReducer(rideReducer, initialState)
@@ -94,6 +97,26 @@ const RideState = props => {
         }
     }
 
+    const requestRide = async (ride) => {
+        try {
+            const config = { headers: { 'content-type': 'application/json', "x-auth-token": localStorage.getItem("token") } };
+
+            const res = await axios.post(`/api/rides/requestride/${ride}`, {}, config);
+        } catch (err) {
+            console.log(err.msg);
+        }
+    }
+
+    const acceptRequest = async (ride, passenger) => {
+        try {
+            const config = { headers: { 'content-type': 'application/json', "x-auth-token": localStorage.getItem("token") } };
+
+            await axios.post(`/api/rides/acceptrequest/${ride}`, {passenger}, config);
+        } catch (err) {
+            console.log(err.msg);
+        }
+    }
+
     const purchaseRide = async (ride) => {
         try {
             const config = { headers: { 'content-type': 'application/json', "x-auth-token": localStorage.getItem("token") } }
@@ -101,7 +124,6 @@ const RideState = props => {
             const stripe = await axios.post("/api/stripe/purchaseride", {ride}, config);
 
             window.location.href = stripe.data.url;
-
         } catch (err) {
             console.log(err.msg);
         }
@@ -118,7 +140,7 @@ const RideState = props => {
 
     const joinRide = async (ride, passenger) => {
         try {
-            const config = { headers: { 'content-type': 'application/json' } }
+            const config = { headers: { 'content-type': 'application/json', "x-auth-token": localStorage.getItem("token") } };
             await axios.put(`/api/rides/join/${ride}`, { rider: passenger.user._id }, config)
 
             const data = {
@@ -174,6 +196,8 @@ const RideState = props => {
                 createRide,
                 editRide,
                 deleteRide,
+                requestRide,
+                acceptRequest,
                 purchaseRide,
                 completeRide,
                 joinRide,
